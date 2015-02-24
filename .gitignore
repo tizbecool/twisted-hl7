@@ -1,7 +1,10 @@
 *\~
+*\#*
 *.pyc
 *.log
 *.egg-info/
+dropin.cache
+/*.egg/
 /build/
 /dist/
 /env/

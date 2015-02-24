@@ -1,10 +1,17 @@
 
+http://txHL7.readthedocs.org/
+
+Project formerly known as "twisted-hl7".
+
 Setup environment::
 
-    virtualenv --no-site-packages env
-    source env/bin/activate
-    pip install -r dev_requirements.txt
+    make env
 
-Run tests::
+Run tests (via twisted's trial)::
 
-    trial tests
+    make tests
+
+
+.. image::
+   https://travis-ci.org/johnpaulett/txHL7.png
+   :target: https://travis-ci.org/johnpaulett/txHL7

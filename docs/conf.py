@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# twisted-hl7 documentation build configuration file, created by
+# txHL7 documentation build configuration file, created by
 # sphinx-quickstart on Tue May 17 20:16:34 2011.
 #
 # This file is execfile()d with the current directory set to its containing dir.
@@ -25,7 +25,7 @@ import sys, os
 
 # Add any Sphinx extension module names here, as strings. They can be extensions
 # coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
-extensions = ['sphinx.ext.autodoc', 'sphinx.ext.doctest', 'sphinx.ext.intersphinx', 'sphinx.ext.todo', 'sphinx.ext.coverage', 'sphinx.ext.viewcode']
+extensions = ['sphinx.ext.autodoc', 'sphinx.ext.doctest', 'sphinx.ext.intersphinx', 'sphinx.ext.todo', 'sphinx.ext.coverage', 'sphinx.ext.viewcode', 'repoze.sphinx.autointerface']
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -40,8 +40,8 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'twisted-hl7'
-copyright = u'2011, John Paulett'
+project = u'txHL7'
+copyright = u'2011-2014, John Paulett'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -164,7 +164,7 @@ html_static_path = ['_static']
 #html_file_suffix = None
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'twisted-hl7doc'
+htmlhelp_basename = 'txHL7doc'
 
 
 # -- Options for LaTeX output --------------------------------------------------
@@ -178,7 +178,7 @@ htmlhelp_basename = 'twisted-hl7doc'
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
-  ('index', 'twisted-hl7.tex', u'twisted-hl7 Documentation',
+  ('index', 'txHL7.tex', u'txHL7 Documentation',
    u'John Paulett', 'manual'),
 ]
 
@@ -211,7 +211,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'twisted-hl7', u'twisted-hl7 Documentation',
+    ('index', 'txHL7', u'txHL7 Documentation',
      [u'John Paulett'], 1)
 ]
 
@@ -219,10 +219,10 @@ man_pages = [
 # -- Options for Epub output ---------------------------------------------------
 
 # Bibliographic Dublin Core info.
-epub_title = u'twisted-hl7'
+epub_title = u'txHL7'
 epub_author = u'John Paulett'
 epub_publisher = u'John Paulett'
-epub_copyright = u'2011, John Paulett'
+epub_copyright = u'2011-2014, John Paulett'
 
 # The language of the text. It defaults to the language option
 # or en if the language is not set.
@@ -257,4 +257,7 @@ epub_copyright = u'2011, John Paulett'
 
 
 # Example configuration for intersphinx: refer to the Python standard library.
-intersphinx_mapping = {'http://docs.python.org/': None}
+intersphinx_mapping = {
+    'http://docs.python.org/': None,
+    'http://twistedmatrix.com/documents/current/': None,
+}
