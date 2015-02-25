@@ -20,6 +20,7 @@ class MinimalLowerLayerProtocol(protocol.Protocol):
     start_block = '\x0b'  # <VT>, vertical tab
     end_block = '\x1c'  # <FS>, file separator
     carriage_return = '\x0d'  # <CR>, \r
+    newline_return = '\x0a'  # <CR>, \r
 
     def dataReceived(self, data):
 
@@ -34,6 +35,9 @@ class MinimalLowerLayerProtocol(protocol.Protocol):
         self._buffer = messages.pop(-1)
 
         for raw_message in messages:
+            # replace newline char with cr
+            raw_message = raw_message.replace(self.newline_return, self.carriage_return)
+
             # strip the rest of the MLLP shell from the HL7 message
             raw_message = raw_message.strip(self.start_block + self.carriage_return)
 

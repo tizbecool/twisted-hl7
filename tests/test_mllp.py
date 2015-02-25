@@ -5,11 +5,13 @@ from twisted.trial.unittest import TestCase
 from txHL7.mllp import IHL7Receiver, MinimalLowerLayerProtocol, MLLPFactory
 from txHL7.receiver import MessageContainer, HL7MessageContainer, AbstractReceiver
 from utils import HL7_MESSAGE
+from oru_edl import HL7_NEWLINE_MESSAGE
 from zope.interface import implements
-
 
 ACK_ID = "TESTACK"
 EXPECTED_ACK_RE = '^' + re.escape('\x0bMSH|^~\\&|GHH OE|BLDG4|GHH LAB|ELAB-3|') + r'\d+' + re.escape('||ACK^R01|' + ACK_ID + '|P|2.4\rMSA|') + '{0}' + re.escape('|CNTRL-3456\x1c\x0d') + '$'
+
+EXPECTED_NEWLINE_ACK_RE = '^' + re.escape('\x0bMSH|^~\\&|EMAGING|EMAGING|XPLORE|EDL|') + r'\d+' + re.escape('||ACK^R01|' + ACK_ID + '|P|2.3.1\rMSA|') + '{0}' + re.escape('|A10004762995082620\x1c\x0d') + '$'
 
 
 class CaptureReceiver(object):
@@ -56,6 +58,13 @@ class MinimalLowerLayerProtocolTest(TestCase):
 
         self.assertEqual(self.receiver.messages, [HL7_MESSAGE])
         self.assertTrue(re.match(EXPECTED_ACK_RE.format('AA'),
+                                 self.protocol.transport.write.call_args[0][0]))
+
+    def testParseNewlineMessage(self):
+        self.protocol.dataReceived('\x0b' + HL7_NEWLINE_MESSAGE + '\x1c\x0d')
+
+        self.assertEqual(self.receiver.messages, [HL7_NEWLINE_MESSAGE.replace('\x0a', '\x0d')])
+        self.assertTrue(re.match(EXPECTED_NEWLINE_ACK_RE.format('AA'),
                                  self.protocol.transport.write.call_args[0][0]))
 
     def testUncaughtError(self):
