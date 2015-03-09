@@ -9,3 +9,4 @@ dropin.cache
 /dist/
 /env/
 /_trial_temp/
+tests/_trial_temp/
