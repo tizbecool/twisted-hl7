@@ -1,5 +1,4 @@
 import sys
-import re
 from twisted.internet import protocol, defer
 from zope.interface.verify import verifyObject
 from txHL7.receiver import IHL7Receiver
@@ -21,7 +20,6 @@ class MinimalLowerLayerProtocol(protocol.Protocol):
     start_block = '\x0b'  # <VT>, vertical tab
     end_block = '\x1c'  # <FS>, file separator
     carriage_return = '\x0d'  # <CR>, \r
-    newline_return = '\x0a'  # <CR>, \r
 
     def dataReceived(self, data):
 
@@ -36,32 +34,27 @@ class MinimalLowerLayerProtocol(protocol.Protocol):
         self._buffer = messages.pop(-1)
 
         for raw_message in messages:
-            # replace one or more newlines char with one cr
-            raw_message = re.sub(r"\n+", self.carriage_return, raw_message)
+            # strip the rest of the MLLP shell from the HL7 message
+            raw_message = raw_message.strip(self.start_block + self.carriage_return)
 
-            # prevent acceptation of message without head
-            if self.start_block in raw_message:
-                # strip the rest of the MLLP shell from the HL7 message
-                raw_message = raw_message.strip(self.start_block + self.carriage_return)
+            # only pass messages with data
+            if len(raw_message) > 0:
+                # convert into unicode, parseMessage expects decoded string
+                raw_message = self.factory.decode(raw_message)
+                message_container = self.factory.parseMessage(raw_message)
 
-                # only pass messages with data
-                if len(raw_message) > 0:
-                    # convert into unicode, parseMessage expects decoded string
-                    raw_message = self.factory.decode(raw_message)
-                    message_container = self.factory.parseMessage(raw_message)
+                # error callback (defined here, since error depends on
+                # current message).  rejects the message
+                def onError(err):
+                    reject = message_container.err(err)
+                    self.writeMessage(reject)
+                    return err
 
-                    # error callback (defined here, since error depends on
-                    # current message).  rejects the message
-                    def onError(err):
-                        reject = message_container.err(err)
-                        self.writeMessage(reject)
-                        return err
-
-                    # have the factory create a deferred and pass the message
-                    # to the approriate IHL7Receiver instance
-                    d = self.factory.handleMessage(message_container)
-                    d.addCallback(onSuccess)
-                    d.addErrback(onError)
+                # have the factory create a deferred and pass the message
+                # to the approriate IHL7Receiver instance
+                d = self.factory.handleMessage(message_container)
+                d.addCallback(onSuccess)
+                d.addErrback(onError)
 
     def writeMessage(self, message):
         if message is None:
