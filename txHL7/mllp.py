@@ -37,7 +37,8 @@ class MinimalLowerLayerProtocol(protocol.Protocol):
 
         for raw_message in messages:
             # replace newline char with cr
-            raw_message = re.sub(r"\n+", self.carriage_return, raw_message)
+            raw_message = re.sub(r"[\n\r]+", self.carriage_return, raw_message)
+
             #raw_message = raw_message.replace(self.newline_return, self.carriage_return)
 
             # prevent acceptation of message without head
