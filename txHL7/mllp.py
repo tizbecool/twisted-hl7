@@ -36,9 +36,8 @@ class MinimalLowerLayerProtocol(protocol.Protocol):
         self._buffer = messages.pop(-1)
 
         for raw_message in messages:
-            # replace newline char with cr
+            # replace one or more newlines char with one cr
             raw_message = re.sub(r"\n+", self.carriage_return, raw_message)
-            #raw_message = raw_message.replace(self.newline_return, self.carriage_return)
 
             # prevent acceptation of message without head
             if self.start_block in raw_message:
